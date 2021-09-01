@@ -1,0 +1,29 @@
+{
+  "name": "information-storage-and-backend",
+  "version": "1.0.0",
+  "description": "A MySQL and Python Flask rest API run using docker",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "is-ci || husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DominicGBauer/information-storage-and-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DominicGBauer/information-storage-and-backend/issues"
+  },
+  "homepage": "https://github.com/DominicGBauer/information-storage-and-backend#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^13.1.0",
+    "@commitlint/config-conventional": "^13.1.0",
+    "husky": "^7.0.2",
+    "is-ci": "^3.0.0"
+  }
+}
