@@ -46,4 +46,4 @@ foreign key(AuthorID) references Authors(AuthorID)
 -- inserting dummy data into tables
 
 INSERT INTO Journals
-VALUES (1, 'http://example.com/afterthought', 'Demand and Supply', '2021/04/01');
+VALUES (1, 'Economic Theory');
