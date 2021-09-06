@@ -1,5 +1,8 @@
 CREATE DATABASE aarons_kit_backend;
 use aarons_kit_backend;
+
+-- table creation
+
 CREATE TABLE Category(
 CategoryID int not null,
 CategoryName varchar(20),
@@ -39,3 +42,8 @@ CONSTRAINT PK_Writes primary key(ArticleID, AuthorID),
 foreign key(ArticleID) references Articles(ArticleID),
 foreign key(AuthorID) references Authors(AuthorID)
 );
+
+-- inserting dummy data into tables
+
+INSERT INTO Journals
+VALUES (1, 'http://example.com/afterthought', 'Demand and Supply', '2021/04/01');
