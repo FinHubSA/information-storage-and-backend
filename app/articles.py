@@ -9,7 +9,7 @@ from flask_cors import cross_origin
 @cross_origin()
 def getAvailableArticles():
     query = """
-    SELECT Title, DatePublished, DOI, URL FROM Articles
+    SELECT Title, DatePublished AS YearPublished, DOI, URL FROM Articles
     """
 
     conn = mysql.connect()
