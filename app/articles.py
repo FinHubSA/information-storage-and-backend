@@ -5,11 +5,11 @@ from flask import jsonify, request
 from flask_cors import cross_origin
 
 
-@app.route("/articles")
+@app.route("/api/articles")
 @cross_origin()
 def getAvailableArticles():
     query = """
-    SELECT Title, DatePublished, DOI, URL FROM Articles
+    SELECT Title, YearPublished, DOI, URL FROM Articles
     """
 
     conn = mysql.connect()
