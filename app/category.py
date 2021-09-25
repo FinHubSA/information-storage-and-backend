@@ -9,10 +9,7 @@ from flask_cors import cross_origin
 @cross_origin()
 def getAvailableCategory():
     query_parameters = request.args
-    print(query_parameters)
     category = query_parameters.get('categoryName')
-    #print(category)
-    #print('Printing query')
     
     query = """
     SELECT A.Title, A.URL, A.DOI, A.YearPublished, J.JournalName, C.CategoryName FROM Articles 
@@ -23,7 +20,7 @@ def getAvailableCategory():
     """.format(
         category
     )
-    #print(query)
+    
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     cursor.execute(query)
