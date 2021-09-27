@@ -24,9 +24,9 @@ primary key(AuthorID)
 
 CREATE TABLE Articles(
 ArticleID int not null,
-URL varchar(80),
-Title varchar(80),
-DatePublished date,
+URL varchar(150),
+Title varchar(150),
+YearPublished int,
 DOI varchar(80),
 CategoryID int not null,
 JournalID int not null,
@@ -44,6 +44,3 @@ foreign key(AuthorID) references Authors(AuthorID)
 );
 
 -- inserting dummy data into tables
-
-INSERT INTO Journals
-VALUES (1, 'Economic Theory');
