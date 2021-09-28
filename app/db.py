@@ -1,5 +1,6 @@
 from app import app
 from flaskext.mysql import MySQL
+import pymysql
 
 mysql = MySQL()
 
