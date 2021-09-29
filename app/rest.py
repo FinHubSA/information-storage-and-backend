@@ -6,3 +6,4 @@ if __name__ == "__main__":
 import articles
 import category
 import journal
+import authors
