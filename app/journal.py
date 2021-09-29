@@ -60,8 +60,8 @@ def getSpecificArticlesfromJournals():
     AS J_C_A
     INNER JOIN Authors
     ON J_C_A.ArticleID = Authors.AuthorID
-    WHERE JournalName = '{0}'
-    ORDER BY YearPublished DESC;
+    WHERE JournalName LIKE '%{}%'
+    ORDER BY YearPublished DESC
     """.format(
         journal
     )
