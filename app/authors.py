@@ -4,11 +4,12 @@ from db import mysql
 from flask import jsonify, request
 from flask_cors import cross_origin
 
-@app.route("/api/authors/search")
+
+@app.route("/api/articles/author")
 @cross_origin()
 def getArticlebyAuthorSearch():
     query_parameters = request.args
-    search = query_parameters.get('AuthorSurname')
+    AuthorSearch = query_parameters.get('authorSurname')
     
     query = """
     SELECT 
@@ -27,9 +28,9 @@ def getArticlebyAuthorSearch():
         WHERE AuthorSurname LIKE '%{}%')
     AS AuthS WHERE W.AuthorID = AuthS.AuthorID
     )
-    AS P WHERE P.ArticleID = A.ArticleID;
+    AS P WHERE P.ArticleID = A.ArticleID
     """.format(
-        search
+        AuthorSearch
     )
     
     conn = mysql.connect()
