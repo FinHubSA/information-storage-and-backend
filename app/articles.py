@@ -22,3 +22,31 @@ def getAvailableArticles():
     resp.status_code = 200
 
     return resp
+
+@app.route("/api/articles/search")
+@cross_origin()
+def getArticlebyTitleSearch():
+    query_parameters = request.args
+    search = query_parameters.get('title')
+    
+    query = """
+    SELECT Title,
+    YearPublished,
+    DOI,
+    URL
+    FROM Articles
+    WHERE Title LIKE '%{}%'
+    """.format(
+        search
+    )
+    
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute(query)
+    results = cursor.fetchall()
+
+    resp = jsonify(results)
+
+    resp.status_code = 200
+
+    return resp
