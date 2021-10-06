@@ -16,7 +16,7 @@ A MySQL and Python Flask rest API run using docker
 1. go through all the Prerequisites in [Prerequisites](docs/prerequisites.md)
 2. run `npm i`
 3. `docker compose up` to build docker images and run docker containers
-4. Go to `localhost:5000` and you should see a "Not Found" page
+4. Go to `localhost:443` and you should see a "Not Found" page
 
 If you run into issues, see the additional docs below **[bottom of page](#Additional-Docs)**
 
@@ -32,7 +32,7 @@ Before contributing **please read through everything in [Contributing](docs/cont
 docker compose up
 ```
 
-This will automatically start the flask application via a local server at localhost:5000 and the mysql database.
+This will automatically start the flask application via a local server at localhost:443 and the mysql database.
 
 **[⬆ back to top](#table-of-contents)**
 
