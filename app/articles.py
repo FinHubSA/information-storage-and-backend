@@ -23,9 +23,9 @@ def getAvailableArticles():
 
     return resp
 
-@app.route("/api/articles/titlesearch")
+@app.route("/api/articles/title")
 @cross_origin()
-def getArticlebyTitleSearch():
+def getArticleByTitle():
     query_parameters = request.args
     search = query_parameters.get('title')
     
@@ -51,7 +51,7 @@ def getArticlebyTitleSearch():
 
     return resp
 
-@app.route("/api/articles/yearsearch")
+@app.route("/api/articles/year")
 @cross_origin()
 def getArticlesbyYearRange():
     query_parameters = request.args

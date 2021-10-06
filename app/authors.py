@@ -5,9 +5,9 @@ from flask import jsonify, request
 from flask_cors import cross_origin
 
 
-@app.route("/api/articles/authorsearch")
+@app.route("/api/articles/author")
 @cross_origin()
-def getArticlebyAuthorSearch():
+def getArticlebyAuthor():
     query_parameters = request.args
     AuthorSearch = query_parameters.get('authorSurname')
     
