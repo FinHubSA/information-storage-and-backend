@@ -23,9 +23,9 @@ def getAvailableArticles():
 
     return resp
 
-@app.route("/api/articles/search")
+@app.route("/api/articles/title")
 @cross_origin()
-def getArticlebyTitleSearch():
+def getArticleByTitle():
     query_parameters = request.args
     search = query_parameters.get('title')
     
@@ -50,3 +50,39 @@ def getArticlebyTitleSearch():
     resp.status_code = 200
 
     return resp
+
+@app.route("/api/articles/year")
+@cross_origin()
+def getArticlesbyYearRange():
+    query_parameters = request.args
+    startDate = query_parameters.get('startyearPublished')
+    endDate = query_parameters.get('endyearPublished')
+
+    query = """
+    SELECT
+    URL, 
+    Title, 
+    YearPublished, 
+    DOI, 
+    AuthorSurname
+    FROM Articles INNER JOIN 
+    Authors ON 
+    Articles.ArticleID = Authors.AuthorID
+    WHERE 
+    YearPublished BETWEEN '{0}' AND '{1}'
+    ORDER BY YearPublished DESC
+
+    """.format(
+        startDate, endDate
+    )
+
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute(query)
+    results = cursor.fetchall()
+
+    resp = jsonify(results)
+    resp.status_code = 200
+
+    return resp
+

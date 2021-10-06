@@ -25,7 +25,7 @@ def getAvailableJournals():
     return resp
 
 
-@app.route("/api/journals")
+@app.route("/api/articles/journal")
 @cross_origin()
 def getSpecificArticlesfromJournals():
     query_parameters = request.args

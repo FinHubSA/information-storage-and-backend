@@ -4,32 +4,27 @@ from db import mysql
 from flask import jsonify, request
 from flask_cors import cross_origin
 
-@app.route("/api/authors/search")
+
+@app.route("/api/articles/author")
 @cross_origin()
-def getArticlebyAuthorSearch():
+def getArticlebyAuthor():
     query_parameters = request.args
-    search = query_parameters.get('AuthorSurname')
+    AuthorSearch = query_parameters.get('authorSurname')
     
     query = """
     SELECT 
-    A.URL,
-    A.Title, 
-    A.YearPublished, 
-    A.DOI, 
-    P.AuthorSurname 
-    FROM
-    Articles AS A,
-    (SELECT W.ArticleID, 
-    AuthS.AuthorSurname 
-    FROM Writes AS W, 
-	    (SELECT AuthorID, 
-        AuthorSurname FROM Authors 
-        WHERE AuthorSurname LIKE '%{}%')
-    AS AuthS WHERE W.AuthorID = AuthS.AuthorID
-    )
-    AS P WHERE P.ArticleID = A.ArticleID;
+    URL,
+    Title,
+    YearPublished,
+    DOI, 
+    AuthorInitial,
+    AuthorSurname
+    FROM Articles INNER JOIN Authors ON
+    Articles.ArticleID = Authors.AuthorID
+    WHERE Authors.AuthorSurname LIKE '%{}%'
+    ORDER BY YearPublished DESC;
     """.format(
-        search
+        AuthorSearch
     )
     
     conn = mysql.connect()
