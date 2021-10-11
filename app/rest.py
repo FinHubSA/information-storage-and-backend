@@ -7,3 +7,4 @@ import articles
 import category
 import journal
 import authors
+import DOI
