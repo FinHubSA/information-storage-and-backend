@@ -66,7 +66,7 @@ INSERT INTO Articles  VALUES (3,'https://aaronskit-cloudstorage.fra1.digitalocea
 INSERT INTO Articles  VALUES (4,'https://aaronskit-cloudstorage.fra1.digitaloceanspaces.com/Jorge%20Alonso-Ortiz.pdf','The productivity cost of sovereign default: evidence from the European debt crisis',2017,1,'10.2307/26704994',3);
 INSERT INTO Articles  VALUES (5,'https://aaronskit-cloudstorage.fra1.digitaloceanspaces.com/JAMES%20BULLARD.pdf','Three Challenges to Central Bank Orthodoxy',2015,1,'10.2307/43678269',4);
 
-INSERT INTO Writes VALUES (1,1);
 INSERT INTO Writes VALUES (2,2);
 INSERT INTO Writes VALUES (3,3);
 INSERT INTO Writes VALUES (4,4);
+INSERT INTO Writes VALUES (5,5);
