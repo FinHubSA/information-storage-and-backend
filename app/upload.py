@@ -12,26 +12,11 @@ SECRET_KEY = 'qfFQWuvjutxD6Gu1PIrpwxZCq8nv2m2L5x0w8+3jHGo'
 @app.route("/api/upload")
 @cross_origin()
 def uploadPdf():
+    query_parameters = request.args
+    paperDOI = query_parameters.get('paperDOI')
     # Initiate session
     session = s.Session()
     client = session.client('s3', region_name='fra1', endpoint_url='https://fra1.digitaloceanspaces.com', aws_access_key_id=ACCESS_ID, aws_secret_access_key=SECRET_KEY)
-
-    f = request.files['file']
-    filename = secure_filename(f.filename)
     # Upload a file to your Space
-    client.upload_file('abc.png', 'aaronskit-cloudstorage', 'uploaded-test.png')
-
-
-    # Upload a file to your Space
-    # client.put_object(Bucket='aaronskit-cloudstorage',
-    #               Key='abc.png',
-    #               Body=b'The contents of the file.',
-    #               ACL='private',
-    #               Metadata={
-    #                   'x-amz-meta-my-key': 'your-value'
-    #               }
-    #             )
-    
-    print('hello')
-
-    # client.upload_file('abc.png', 'aaronskit-cloudstorage', 'abc.png')
+    client.upload_file('DOI/'+paperDOI+'.png', 'aaronskit-cloudstorage', paperDOI+'.png')
+    #Speak to remote aaronskit server to create a new entry to the articles table using the URL above and other data
