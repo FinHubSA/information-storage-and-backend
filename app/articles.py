@@ -9,25 +9,7 @@ from flask_cors import cross_origin
 @cross_origin()
 def getAvailableArticles():
     query = """
-    SELECT URL, 
-    Title, 
-    YearPublished, 
-    DOI, 
-    JournalName, 
-    AuthorInitial, 
-    AuthorSurname FROM 
-		(SELECT ArticleID, URL, 
-		Title, YearPublished, DOI,
-		JournalName FROM Articles 
-		INNER JOIN 
-		Journals ON 
-        Articles.JournalID = Journals.JournalID) 
-	AS New1 INNER JOIN 
-		(SELECT ArticleID, AuthorInitial, 
-        AuthorSurname FROM Writes AS W 
-        INNER JOIN Authors AS A ON  
-        W.AuthorID = A.AuthorID) 
-	AS New2 ON New1.ArticleID = New2.ArticleID;
+    SELECT * FROM Articles
     """
 
     conn = mysql.connect()
@@ -40,6 +22,42 @@ def getAvailableArticles():
     resp.status_code = 200
 
     return resp
+
+@app.route("/api/create-article", methods=["POST"])
+@cross_origin()
+def postArticle():
+    query_parameters = request.args
+    articleID = query_parameters.get('ArticleID')
+    URL = query_parameters.get('URL')
+    Title = query_parameters.get('Title')
+    YearPublished = query_parameters.get('YearPublished')
+    CategoryID = query_parameters.get('CategoryID')
+    DOI = query_parameters.get('DOI')
+    JournalID = query_parameters.get('JournalID')
+    query = """
+    INSERT INTO Articles
+    VALUES
+	    ("""+articleID+""","""+URL+""","""+Title+""","""+YearPublished+""","""+CategoryID+""","""+DOI+""","""+JournalID+""");
+    """         
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute(query)
+    conn.commit()
+    query2 = """
+    INSERT INTO Writes
+    VALUES
+	    ("""+articleID+""",5)
+    """         
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute(query2)
+    conn.commit()
+    results = cursor.fetchall()
+
+    resp = jsonify(results)
+    resp.status_code = 200
+    return resp
+
 
 @app.route("/api/articles/title")
 @cross_origin()
