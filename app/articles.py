@@ -3,7 +3,11 @@ from app import app
 from db import mysql
 from flask import jsonify, request
 from flask_cors import cross_origin
+import json
+import urllib.request as requests
 
+
+remoteURL = "https://api-aaronskit.org/api/"
 
 @app.route("/api/articles")
 @cross_origin()
@@ -26,36 +30,81 @@ def getAvailableArticles():
 @app.route("/api/create-article", methods=["POST"])
 @cross_origin()
 def postArticle():
+    newArticle = json
+    with open("article.json", "r") as read_file:
+        newArticle = json.load(read_file)
     query_parameters = request.args
-    articleID = query_parameters.get('ArticleID')
-    URL = query_parameters.get('URL')
-    Title = query_parameters.get('Title')
-    YearPublished = query_parameters.get('YearPublished')
-    CategoryID = query_parameters.get('CategoryID')
-    DOI = query_parameters.get('DOI')
-    JournalID = query_parameters.get('JournalID')
-    query = """
+    # articleID = query_parameters.get('ArticleID')
+    # URL = query_parameters.get('URL')
+    # Title = query_parameters.get('Title')
+    # YearPublished = query_parameters.get('YearPublished')
+    # CategoryID = query_parameters.get('CategoryID')
+    # DOI = query_parameters.get('DOI')
+    # JournalID = query_parameters.get('JournalID')
+    # JournalName = query_parameters.get('JournalName')
+    # AuthorSurname = query_parameters.get('AuthorSurname')    
+    # JournalName = "American%20Economic%20Journal:%20Macroeconomics"
+    # AuthorSurname = "Chen"
+    # AuthorInitial = 'C'
+    
+    #check if journal exists, if not, create new journal
+    # journalCheck = requests.urlopen(remoteURL+"articles/journal?journalName="+newArticle.JournalName).read()
+    # print(journalCheck)
+    # if (len(journalCheck)==0):
+    # #create new journal
+    #     journalQuery = """
+    #     INSERT INTO Journals
+    #     VALUES
+    #         ("""+newArticle.JournalName+""");
+    #     """         
+    #     conn = mysql.connect()
+    #     cursor = conn.cursor(pymysql.cursors.DictCursor)
+    #     cursor.execute(journalQuery)
+    #     conn.commit()
+
+    #check if author exists, if not, create new author
+    authorURL= remoteURL+"articles/author?authorSurname="+newArticle["AuthorSurname"]
+    print(authorURL)
+    authorCheck = requests.urlopen(authorURL).read()
+    if (len(authorCheck)==0):
+    #create new author
+        journalQuery = """
+        INSERT INTO Authors
+        VALUES
+            ("""+newArticle["AuthorInitial"]+""","""+newArticle["AuthorSurname"]+""");
+        """
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute(journalQuery)
+        conn.commit()
+    
+    #after creating a new journal and author, now create a new article
+    articlesQuery = """
     INSERT INTO Articles
     VALUES
-	    ("""+articleID+""","""+URL+""","""+Title+""","""+YearPublished+""","""+CategoryID+""","""+DOI+""","""+JournalID+""");
-    """         
+	    ("""+newArticle["ArticleID"]+""",'"""+newArticle["URL"]+"""','"""+newArticle["Title"]+"""',"""+newArticle["YearPublished"]+""","""+newArticle["CategoryID"]+""",'"""+newArticle["DOI"]+"""',"""+newArticle["JournalID"]+""");
+    """
+    print(articlesQuery)      
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    cursor.execute(query)
+    cursor.execute(articlesQuery)
     conn.commit()
-    query2 = """
+    
+    #insert into Writes table
+    writesQuery = """
     INSERT INTO Writes
     VALUES
-	    ("""+articleID+""",5)
+	    (8,"""+newArticle["JournalID"]+""")
     """         
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    cursor.execute(query2)
+    cursor.execute(writesQuery)
     conn.commit()
     results = cursor.fetchall()
 
     resp = jsonify(results)
     resp.status_code = 200
+
     return resp
 
 
