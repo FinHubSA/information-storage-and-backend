@@ -165,6 +165,10 @@ def uploadPdf():
     article = articleCheck[0]
     newArticleID = article["ArticleID"]
 
+    #check for author ID
+    authorCheck = checkAuthorExists(paperDOI)
+    authors = authorCheck[0]
+    newAuthorID = authors["AuthorID"]    
 
     #insert into Writes table
     writesQuery = """
