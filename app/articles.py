@@ -121,3 +121,42 @@ def getArticlesbyYearRange():
 
     return resp
 
+@app.route("/api/articles/check")
+@cross_origin()
+def checkArticleByTitle():
+    query_parameters = request.args
+    search = query_parameters.get('titlecheck')
+    
+    query = """
+    SELECT New1.ArticleID, Title,
+    YearPublished,
+    DOI,
+    URL,
+    JournalName, AuthorInitial, AuthorSurname FROM 
+        (SELECT Title,
+        YearPublished,
+        DOI,
+        URL, JournalName, ArticleID
+        FROM Articles INNER JOIN Journals ON 
+        Articles.JournalID = Journals.JournalID 
+        WHERE Title = "{}") AS New1
+    INNER JOIN 
+        (SELECT ArticleID, 
+        AuthorInitial, 
+        AuthorSurname FROM Writes 
+        AS W INNER JOIN Authors AS 
+        A ON  W.AuthorID = A.AuthorID) 
+    AS New2 ON New1.ArticleID = New2.ArticleID;
+    """.format(
+        search
+    )
+
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute(query)
+    results = cursor.fetchall()
+
+    resp = jsonify(results)
+    resp.status_code = 200
+
+    return resp
