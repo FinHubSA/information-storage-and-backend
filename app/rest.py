@@ -8,3 +8,4 @@ import category
 import upload
 import journal
 import authors
+import DOI

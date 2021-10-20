@@ -9,7 +9,25 @@ from flask_cors import cross_origin
 @cross_origin()
 def getAvailableArticles():
     query = """
-    SELECT Title, YearPublished, DOI, URL FROM Articles
+    SELECT URL, 
+    Title, 
+    YearPublished, 
+    DOI, 
+    JournalName, 
+    AuthorInitial, 
+    AuthorSurname FROM 
+		(SELECT ArticleID, URL, 
+		Title, YearPublished, DOI,
+		JournalName FROM Articles 
+		INNER JOIN 
+		Journals ON 
+        Articles.JournalID = Journals.JournalID) 
+	AS New1 INNER JOIN 
+		(SELECT ArticleID, AuthorInitial, 
+        AuthorSurname FROM Writes AS W 
+        INNER JOIN Authors AS A ON  
+        W.AuthorID = A.AuthorID) 
+	AS New2 ON New1.ArticleID = New2.ArticleID;
     """
 
     conn = mysql.connect()
@@ -31,11 +49,22 @@ def getArticleByTitle():
     
     query = """
     SELECT Title,
-    YearPublished,
-    DOI,
-    URL
-    FROM Articles
-    WHERE Title LIKE '%{}%'
+    YearPublished, 
+    DOI, 
+    URL, 
+    JournalName, AuthorInitial, AuthorSurname FROM 
+	    (SELECT Title,
+        YearPublished,
+        DOI,
+        URL, JournalName, ArticleID 
+        FROM Articles INNER JOIN 
+        Journals ON Articles.JournalID = Journals.JournalID
+        WHERE Title LIKE '%{}%')
+    AS New1 INNER JOIN  
+	    (SELECT ArticleID, AuthorInitial, AuthorSurname 
+        FROM Writes AS W INNER JOIN Authors AS A 
+        ON  W.AuthorID = A.AuthorID) 
+    AS New2 ON New1.ArticleID = New2.ArticleID;
     """.format(
         search
     )
@@ -59,19 +88,25 @@ def getArticlesbyYearRange():
     endDate = query_parameters.get('endyearPublished')
 
     query = """
-    SELECT
-    URL, 
+    SELECT URL, 
     Title, 
     YearPublished, 
-    DOI, 
-    AuthorSurname
-    FROM Articles INNER JOIN 
-    Authors ON 
-    Articles.ArticleID = Authors.AuthorID
-    WHERE 
-    YearPublished BETWEEN '{0}' AND '{1}'
-    ORDER BY YearPublished DESC
-
+    DOI, AuthorInitial,
+    AuthorSurname, JournalName FROM 
+        (SELECT
+        URL, 
+        Title, 
+        YearPublished, 
+        DOI, AuthorInitial,
+        AuthorSurname, JournalID
+        FROM Articles INNER JOIN 
+        Authors ON 
+        Articles.ArticleID = Authors.AuthorID
+        WHERE 
+        YearPublished BETWEEN '{0}' AND '{1}'
+        ORDER BY YearPublished DESC) 
+    AS New1 INNER JOIN Journals 
+    ON New1.JournalID = Journals.JournalID;
     """.format(
         startDate, endDate
     )
@@ -86,3 +121,42 @@ def getArticlesbyYearRange():
 
     return resp
 
+@app.route("/api/articles/check")
+@cross_origin()
+def checkArticleByTitle():
+    query_parameters = request.args
+    search = query_parameters.get('titlecheck')
+    
+    query = """
+    SELECT New1.ArticleID, Title,
+    YearPublished,
+    DOI,
+    URL,
+    JournalName, AuthorInitial, AuthorSurname FROM 
+        (SELECT Title,
+        YearPublished,
+        DOI,
+        URL, JournalName, ArticleID
+        FROM Articles INNER JOIN Journals ON 
+        Articles.JournalID = Journals.JournalID 
+        WHERE Title = "{}") AS New1
+    INNER JOIN 
+        (SELECT ArticleID, 
+        AuthorInitial, 
+        AuthorSurname FROM Writes 
+        AS W INNER JOIN Authors AS 
+        A ON  W.AuthorID = A.AuthorID) 
+    AS New2 ON New1.ArticleID = New2.ArticleID;
+    """.format(
+        search
+    )
+
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute(query)
+    results = cursor.fetchall()
+
+    resp = jsonify(results)
+    resp.status_code = 200
+
+    return resp
