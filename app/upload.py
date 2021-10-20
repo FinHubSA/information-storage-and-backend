@@ -20,8 +20,12 @@ newJournalID = None
 uploadedFile = FileStorage
 
 #upload json files with the following command:
-#curl -X POST -F file=@"sdfstrvadfdsfdsfdl442l.json" http://localhost:5000/api/upload-metadata
-#NB: use the following naming convention: filename.json
+#curl -X POST -F file=@"sdfstrvadfdsfdsfdl442l.pdf" https://api-aaronskit.org/api/upload-paper-droplet
+#curl -X POST -F file=@"sdfstrvadfdsfdsfdl442l.json" https://api-aaronskit.org/api/upload-metadata
+#NB: use the following naming convention: doi.json, doi.pdf
+
+#sample endpoint:
+#http://localhost:5000/api/upload-pdf?paperDOI=sdfstrvadfdsfdsfdl442r
 
 def checkAuthorExists(paperDOI):
     newArticle = json
@@ -39,8 +43,8 @@ def checkJournalExists(paperDOI):
         newArticle = json.load(read_file)
     replcaceSpacesJournal = replaceSpaces(newArticle["JournalName"])
     journalURL= remoteURL+"journals/check?checkjournal="+replcaceSpacesJournal
-    print(journalURL)
     journalRAW = requests.urlopen(journalURL).read()
+    print(journalRAW)
     journalCheck = json.loads(journalRAW)
     return journalCheck
 
@@ -49,9 +53,9 @@ def checkArticleExists(paperDOI):
     with open("Metadata/"+paperDOI+".json", "r") as read_file:
         newArticle = json.load(read_file)
     doi = newArticle["DOI"]
-    articlelURL= remoteURL+"/articles/doi?checkdoi="+paperDOI
+    articlelURL= remoteURL+"articles/doi?checkdoi="+paperDOI
     print(articlelURL)
-    articleRAW = requests.urlopen(articlelURL).read()
+    articleRAW = requests.urlopen(articlelURL).read()    
     articleCheck = json.loads(articleRAW)
     return articleCheck
     
@@ -70,6 +74,14 @@ def uploadMetadata():
     uploadedFile.save("Metadata/"+filename) 
     return filename
 
+@app.route("/api/upload-paper-droplet", methods=['POST','PUT'])
+@cross_origin()
+def uploadPaperToServer():
+    ##### Upload Metadata #####    
+    uploadedFile = request.files['file']
+    filename=secure_filename(uploadedFile.filename)  
+    uploadedFile.save("Papers/"+filename) 
+    return filename
 
 @app.route("/api/upload-pdf")
 @cross_origin()
@@ -84,8 +96,7 @@ def uploadPdf():
     client.upload_file('Papers/'+paperDOI+'.pdf', 'aaronskit-cloudstorage', paperDOI+'.pdf',ExtraArgs={'ACL':'public-read', 'StorageClass':'REDUCED_REDUNDANCY'})
 
     #build article URL for insertion into articles table
-    # newArticleUrl = "https://aaronskit-cloudstorage.fra1.digitaloceanspaces.com/"+paperDOI+".pdf"
-    newArticleUrl = "http://localhost:5000/"+paperDOI+".pdf"
+    newArticleUrl = "https://aaronskit-cloudstorage.fra1.digitaloceanspaces.com/"+paperDOI+".pdf"
     ##### Create new article #####
     
     #Speak to remote aaronskit server to create a new entry to the articles table using the URL above and metadata
@@ -159,7 +170,7 @@ def uploadPdf():
     writesQuery = """
     INSERT INTO Writes
     VALUES
-	    ('"""+newArticleID+""","""+newAuthorID+"""')
+	    ('"""+str(newArticleID)+"""','"""+str(newAuthorID)+"""')
     """
     print(writesQuery)         
     conn = mysql.connect()
