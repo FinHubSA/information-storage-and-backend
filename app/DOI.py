@@ -11,7 +11,7 @@ def checkArticlebyDOI():
     search = query_parameters.get('checkdoi')
 
     query = """
-    SELECT DOI
+    SELECT ArticleID,DOI
     FROM Articles
     WHERE DOI ="{}";
     """.format(
