@@ -12,6 +12,8 @@ develop-eggs/
 dist/
 eggs/
 lib/
+app/Metadata/
+app/Papers/
 lib64/
 parts/
 sdist/

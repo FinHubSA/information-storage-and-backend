@@ -31,7 +31,7 @@ def checkAuthorExists(paperDOI):
     newArticle = json
     with open("Metadata/"+paperDOI+".json", "r") as read_file:
         newArticle = json.load(read_file)
-     #check if author exists
+      #check if author exists
     authorURL= remoteURL+"author/check?surname="+newArticle["AuthorSurname"]+"&initial="+newArticle["AuthorInitial"]
     authorRAW = requests.urlopen(authorURL).read()
     authorCheck = json.loads(authorRAW)
