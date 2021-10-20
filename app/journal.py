@@ -76,3 +76,28 @@ def getSpecificArticlesfromJournals():
     resp.status_code = 200
 
     return resp
+
+@app.route("/api/journals/check")
+@cross_origin()
+def checkArticlebyJournalName():
+    query_parameters = request.args
+    search = query_parameters.get('checkjournal')
+
+    query = """
+    SELECT JournalID, JournalName
+    FROM Journals
+    WHERE JournalName ="{}";
+    """.format(
+        search
+    )
+    
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute(query)
+    results = cursor.fetchall()
+
+    resp = jsonify(results)
+
+    resp.status_code = 200
+
+    return resp
