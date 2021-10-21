@@ -5,6 +5,7 @@ if __name__ == "__main__":
 
 import articles
 import category
+import upload
 import journal
 import authors
 import DOI

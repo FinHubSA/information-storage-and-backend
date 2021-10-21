@@ -11,7 +11,11 @@ build/
 develop-eggs/
 dist/
 eggs/
+db/.DS_Store
 lib/
+app/Metadata/
+node_modles/
+app/Papers/
 lib64/
 parts/
 sdist/
