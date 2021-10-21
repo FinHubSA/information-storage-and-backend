@@ -1,5 +1,3 @@
-import paramiko
-import ftplib
 import pymysql
 from werkzeug.datastructures import FileStorage
 from app import app
