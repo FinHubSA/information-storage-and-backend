@@ -12,8 +12,8 @@ import urllib.request as requests
 
 ACCESS_ID = 'ZOO2NN5ZCZKZCDTVMTSY'
 SECRET_KEY = 'qfFQWuvjutxD6Gu1PIrpwxZCq8nv2m2L5x0w8+3jHGo'
-# remoteURL = "https://api-aaronskit.org/api/"
-remoteURL = "http://localhost:5000/api/"
+
+remoteURL = "https://api-aaronskit.org/api/"
 newJournalID = None
 uploadedFile = FileStorage
 
@@ -23,7 +23,7 @@ uploadedFile = FileStorage
 #NB: use the following naming convention: doi.json, doi.pdf
 
 #sample endpoint:
-#http://localhost:5000/api/upload-pdf?paperDOI=sdfstrvadfdsfdsfdl442r
+#https://api-aaronskit.org/api/upload-pdf?paperDOI=sdfstrvadfdsfdsfdl442r
 
 def checkAuthorExists(paperDOI):
     newArticle = json
