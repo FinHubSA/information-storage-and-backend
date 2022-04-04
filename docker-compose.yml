@@ -19,6 +19,7 @@ services:
     command: flask run --host=0.0.0.0 --port=5000
 
   db:
+    platform: linux/x86_64
     image: mysql:8.0.21
     restart: unless-stopped
     ports:
