@@ -1,0 +1,15 @@
+#cryptography==3.4.7
+#Flask==1.1.2
+#boto3==1.18.61
+#Flask-MySQL==1.5.1
+#PyMySQL==0.10.0
+#Flask-CORS==3.0.10
+#uWSGI==2.0.17.1
+
+cryptography
+Flask
+boto3
+Flask-MySQL
+PyMySQL
+Flask-CORS
+uWSGI
