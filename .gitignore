@@ -14,7 +14,7 @@ eggs/
 db/.DS_Store
 lib/
 app/Metadata/
-node_modles/
+node_modules/
 app/Papers/
 lib64/
 parts/
